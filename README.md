@@ -1,6 +1,6 @@
 # Dairy Training Portfolio
 
-Source for a portfolio and project page by [Your Name]. It presents two side projects:
+Source for a portfolio and project page by Kenneth Sutedjo. It presents two side projects:
 
 - **A training game for new dairy operators** (hygiene, GMP, CIP basics), hosted on itch.io.
 - **A dairy knowledge base** covering process, quality, hygiene, maintenance and troubleshooting.
