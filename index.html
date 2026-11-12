@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dairy Training Portfolio</title>
+<meta name="description" content="A mobile training game for new dairy operators and a dairy knowledge base, by a food scientist with soft cheese and mozzarella plant experience.">
+<meta property="og:title" content="Dairy Training Portfolio">
+<meta property="og:description" content="A training game for new dairy operators and a dairy knowledge base.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: plant-signage look. Stainless-grey ground, ink type, one safety-yellow signal.
+   The hero pairs a headline with a playable sample scenario and a milk-to-pack line. */
+:root {
+  --steel: #EEF2F4;
+  --paper: #FFFFFF;
+  --ink: #0E2233;
+  --ink-2: #44586A;
+  --line: #C4CFD6;
+  --signal: #F2C230;
+  --blue: #1556A8;
+  --good: #1B6B45;
+  --bad: #9A2B1F;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--steel);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.05; }
+p { margin: 0; }
+a { color: var(--blue); }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.wrap { width: min(1160px, 100% - 40px); margin-inline: auto; }
+.mono { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+.eyebrow { color: var(--ink-2); display: block; margin-bottom: 14px; }
+
+/* Draft banner */
+.draftbar { background: var(--ink); color: #fff; padding: 8px 0; }
+.draftbar .wrap { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.draftbar b { background: var(--signal); color: var(--ink); padding: 2px 8px; font-weight: 500; }
+
+/* Header */
+header.site { border-bottom: 1px solid var(--line); background: var(--steel); }
+header.site .wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding-block: 18px; }
+.brand { font-family: var(--display); font-weight: 800; font-stretch: 112%; font-size: 1.15rem; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
+.brand span { background: var(--signal); padding: 0 6px; margin-right: 6px; }
+nav ul { display: flex; gap: 6px 22px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+nav a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 2px; display: inline-block; min-height: 44px; }
+nav a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+
+/* Hero */
+.hero { padding-block: 56px 40px; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: 56px; align-items: center; }
+.hero h1 { font-weight: 800; font-stretch: 116%; font-size: clamp(2.3rem, 5.6vw, 4.5rem); letter-spacing: -0.025em; }
+.hero h1 mark { background: var(--signal); color: var(--ink); padding: 0 0.12em; }
+.hero .lede { margin-top: 24px; max-width: 54ch; font-size: 1.2rem; color: var(--ink); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; align-items: center; }
+.btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; font-weight: 700; font-size: 1rem; text-decoration: none; border: 2px solid var(--ink); border-radius: 3px; }
+.btn.primary { background: var(--signal); color: var(--ink); }
+.btn.primary:hover { background: #FFD24A; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: #fff; }
+.note { margin-top: 14px; color: var(--ink-2); font-size: 0.9rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.chip { border: 1px solid var(--ink); padding: 3px 10px; border-radius: 99px; background: var(--paper); }
+
+/* Phone demo */
+.phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.phone { width: min(100%, 330px); background: var(--ink); padding: 11px; border-radius: 36px; }
+.screen { background: var(--paper); border-radius: 26px; padding: 18px 16px 16px; min-height: 520px; display: flex; flex-direction: column; gap: 12px; }
+.screen .top { display: flex; justify-content: space-between; gap: 8px; color: var(--ink-2); }
+.progress { height: 6px; background: var(--steel); border-radius: 3px; overflow: hidden; }
+.progress i { display: block; height: 100%; width: 37.5%; background: var(--signal); }
+.scene { background: var(--steel); border-radius: 10px; display: block; width: 100%; height: auto; }
+.q { font-weight: 700; font-size: 1rem; line-height: 1.35; }
+.opts { display: flex; flex-direction: column; gap: 8px; }
+.opt { text-align: left; font: inherit; font-size: 0.93rem; line-height: 1.35; padding: 11px 12px; min-height: 48px; background: var(--paper); border: 2px solid var(--line); border-radius: 8px; color: var(--ink); cursor: pointer; }
+.opt:hover:not(:disabled) { border-color: var(--ink); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--good); background: #E6F3EC; }
+.opt.wrong { border-color: var(--bad); background: #FBEAE7; }
+.feedback { font-size: 0.9rem; line-height: 1.4; min-height: 2.8em; }
+.feedback strong { display: block; }
+.reset { align-self: flex-start; font: inherit; font-size: 0.85rem; font-weight: 600; background: none; border: 0; color: var(--blue); text-decoration: underline; padding: 10px 0; cursor: pointer; min-height: 44px; }
+.reset[hidden] { display: none; }
+.phone-cap { color: var(--ink-2); text-align: center; max-width: 34ch; }
+
+/* Process line */
+.line-sec { padding-block: 24px 64px; }
+.line-head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: baseline; margin-bottom: 36px; }
+.line-head p { color: var(--ink-2); font-size: 0.9rem; max-width: 48ch; }
+ol.line { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0 14px; counter-reset: s; }
+ol.line li { position: relative; border-top: 2px solid var(--ink); padding-top: 20px; counter-increment: s; }
+ol.line li::before {
+  content: counter(s);
+  position: absolute; top: -19px; left: 0;
+  width: 36px; height: 36px; display: grid; place-items: center;
+  background: var(--paper); border: 2px solid var(--ink);
+  font-family: var(--mono); font-weight: 500; font-size: 0.9rem;
+  animation: lit 10.5s infinite;
+}
+ol.line li:nth-child(1)::before { animation-delay: 0s; }
+ol.line li:nth-child(2)::before { animation-delay: 1.5s; }
+ol.line li:nth-child(3)::before { animation-delay: 3s; }
+ol.line li:nth-child(4)::before { animation-delay: 4.5s; }
+ol.line li:nth-child(5)::before { animation-delay: 6s; }
+ol.line li:nth-child(6)::before { animation-delay: 7.5s; }
+ol.line li:nth-child(7)::before { animation-delay: 9s; }
+@keyframes lit { 0%, 12% { background: var(--signal); } 16%, 100% { background: var(--paper); } }
+ol.line h3 { font-size: 1.05rem; font-weight: 800; font-stretch: 105%; margin-bottom: 4px; }
+ol.line p { font-size: 0.88rem; color: var(--ink-2); line-height: 1.4; }
+ol.line .spec { font-family: var(--mono); font-size: 0.8rem; color: var(--ink); font-weight: 500; }
+
+/* Sections */
+section.block { padding-block: 72px; border-top: 1px solid var(--line); }
+section.block.alt { background: var(--paper); }
+.sec-head { max-width: 62ch; margin-bottom: 44px; }
+.sec-head h2 { font-weight: 800; font-stretch: 112%; font-size: clamp(1.9rem, 4vw, 2.9rem); letter-spacing: -0.02em; }
+.sec-head p { margin-top: 16px; color: var(--ink-2); font-size: 1.08rem; }
+.status { display: inline-block; background: var(--ink); color: #fff; padding: 2px 9px; margin-left: 10px; vertical-align: middle; }
+.status.open { background: var(--signal); color: var(--ink); }
+
+.two { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 28px; align-items: start; }
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 28px; }
+section.alt .panel { background: var(--steel); }
+.panel h3 { font-size: 1.45rem; font-weight: 800; font-stretch: 108%; margin-bottom: 12px; }
+.panel > p { color: var(--ink-2); }
+.topics { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
+.topics li { padding: 12px 0; border-top: 1px solid var(--line); font-weight: 600; font-size: 0.97rem; line-height: 1.35; }
+.topics li small { display: block; font-weight: 400; color: var(--ink-2); font-size: 0.85rem; margin-top: 2px; }
+
+table.entry { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.92rem; }
+table.entry th, table.entry td { text-align: left; vertical-align: top; padding: 10px 0; border-top: 1px solid var(--line); }
+table.entry th { width: 40%; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); font-weight: 500; padding-right: 12px; }
+table.entry td { color: var(--ink); }
+.pending { color: var(--ink-2); font-style: italic; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.tag { border: 1px solid var(--ink); padding: 3px 10px; background: var(--paper); }
+
+.goals { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0 20px; margin: 0; padding: 0; list-style: none; }
+.goals li { border-top: 2px solid var(--ink); padding-top: 14px; }
+.goals b { display: block; font-weight: 800; font-stretch: 105%; margin-bottom: 4px; line-height: 1.2; }
+.goals span { color: var(--ink-2); font-size: 0.9rem; line-height: 1.4; display: block; }
+
+.about { display: grid; grid-template-columns: minmax(0, 0.55fr) minmax(0, 1.45fr); gap: 56px; align-items: start; }
+.photo { aspect-ratio: 4 / 5; background: var(--steel); border: 2px dashed var(--ink-2); display: grid; place-items: center; text-align: center; padding: 16px; color: var(--ink-2); }
+.about p + p { margin-top: 16px; }
+.facts { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 0; }
+.facts li { display: grid; grid-template-columns: 9.5rem 1fr; gap: 16px; padding: 12px 0; border-top: 1px solid var(--line); }
+.facts li span:first-child { color: var(--ink-2); }
+
+.consult { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: start; }
+.areas { list-style: none; margin: 0; padding: 0; }
+.areas li { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line); font-weight: 600; }
+.areas li span { color: var(--ink-2); font-weight: 400; font-size: 0.85rem; white-space: nowrap; }
+
+.contact { background: var(--ink); color: #fff; padding-block: 72px; }
+.contact h2 { font-weight: 800; font-stretch: 112%; font-size: clamp(1.9rem, 4vw, 2.9rem); letter-spacing: -0.02em; max-width: 20ch; }
+.contact p { margin-top: 16px; max-width: 54ch; color: #D4DEE6; }
+.contact .cta-row .btn { border-color: #fff; }
+.contact .btn.primary { border-color: var(--signal); }
+.contact .btn.ghost { color: #fff; }
+.contact .btn.ghost:hover { background: #fff; color: var(--ink); }
+.contact .addr { margin-top: 22px; color: #fff; font-family: var(--mono); font-size: 0.9rem; }
+.contact :focus-visible { outline-color: var(--signal); }
+
+footer.site { background: var(--steel); padding-block: 36px; border-top: 1px solid var(--line); }
+footer.site p { color: var(--ink-2); font-size: 0.85rem; max-width: 80ch; }
+footer.site p + p { margin-top: 10px; }
+
+@media (max-width: 980px) {
+  .hero-grid, .two, .about, .consult { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .goals { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
+  .photo { max-width: 260px; }
+}
+@media (max-width: 860px) {
+  ol.line { grid-template-columns: minmax(0, 1fr); gap: 28px 0; }
+  ol.line li { border-top: 0; border-left: 2px solid var(--ink); padding: 0 0 0 28px; }
+  ol.line li::before { top: 0; left: -19px; }
+}
+@media (max-width: 560px) {
+  .topics { grid-template-columns: minmax(0, 1fr); }
+  .goals { grid-template-columns: minmax(0, 1fr); }
+  .facts li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .panel { padding: 22px 18px; }
+  section.block { padding-block: 56px; }
+  .areas li { flex-direction: column; gap: 2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  ol.line li::before { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="draftbar">
+  <div class="wrap mono"><b>Draft</b><span>Text in [square brackets] is a placeholder to replace before publishing.</span></div>
+</div>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="#top"><span>[Y]</span>[Your Name]</a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#game">Game</a></li>
+        <li><a href="#knowledge">Knowledge base</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#consulting">Consulting</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow mono">Dairy training game and knowledge base</span>
+      <h1>Learn the dairy plant <mark>before</mark> your first shift.</h1>
+      <p class="lede">A phone game that teaches new dairy operators hygiene, GMP and CIP basics through short plant-floor scenarios. Built by a food scientist with soft cheese and mozzarella production experience.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#game">Play on itch.io</a>
+        <a class="btn ghost" href="#knowledge">See the knowledge base</a>
+      </div>
+      <p class="note">[ITCH.IO LINK] goes here once the demo is uploaded.</p>
+      <div class="chips" aria-label="Project details">
+        <span class="chip mono">In development</span>
+        <span class="chip mono">Bahasa Indonesia + English</span>
+        <span class="chip mono">Phone first</span>
+      </div>
+    </div>
+
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="screen" id="demo">
+          <div class="top mono"><span>Level 2 · Hygiene zones</span><span>3 / 8</span></div>
+          <div class="progress" aria-hidden="true"><i></i></div>
+          <svg class="scene" viewBox="0 0 280 120" role="img" aria-label="A hose end lying on the floor near a drain in a packing room">
+            <rect x="0" y="82" width="280" height="38" fill="#D5DEE4"/>
+            <line x1="0" y1="82" x2="280" y2="82" stroke="#9BAAB5" stroke-width="2"/>
+            <rect x="188" y="8" width="70" height="74" fill="#C4CFD6"/>
+            <rect x="196" y="16" width="54" height="30" fill="#EEF2F4"/>
+            <rect x="22" y="14" width="10" height="68" fill="#9BAAB5"/>
+            <path d="M27 22 C 27 60, 70 40, 100 78 S 160 104, 196 96" fill="none" stroke="#1556A8" stroke-width="7" stroke-linecap="round"/>
+            <rect x="192" y="90" width="22" height="12" rx="3" fill="#0E2233"/>
+            <ellipse cx="136" cy="102" rx="16" ry="5" fill="#44586A"/>
+            <line x1="124" y1="102" x2="148" y2="102" stroke="#D5DEE4" stroke-width="1.5"/>
+          </svg>
+          <p class="q">A hose end is lying on the packing room floor. You were about to use it. What do you do?</p>
+          <div class="opts" id="opts">
+            <button class="opt" type="button" data-result="wrong" data-msg="Water alone does not remove what the floor left on the hose end. Stop and follow your plant's cleaning rule first.">Rinse it with water and carry on.</button>
+            <button class="opt" type="button" data-result="right" data-msg="Report it and follow your plant's procedure to clean and sanitise the end before the hose is used again.">Stop, tell your supervisor, and sanitise the end before use.</button>
+            <button class="opt" type="button" data-result="wrong" data-msg="Hoses are used around equipment and product areas, so a dirty end can spread soil to them.">Use it. It is only for washing.</button>
+          </div>
+          <div class="feedback" id="feedback" aria-live="polite"></div>
+          <button class="reset" id="reset" type="button" hidden>Try again</button>
+        </div>
+      </div>
+      <p class="phone-cap mono">Sample scenario. Wording not yet expert-reviewed.</p>
+    </div>
+  </div>
+</section>
+
+<section class="line-sec" aria-labelledby="line-title">
+  <div class="wrap">
+    <div class="line-head">
+      <h2 class="mono" id="line-title" style="margin:0">Example line: mozzarella, milk to pack</h2>
+      <p>Operators learn where their job sits on the line, and what goes wrong when a step is skipped. Sample flow, not a validated process.</p>
+    </div>
+    <ol class="line">
+      <li><h3>Intake</h3><p>Raw milk received and checked.</p></li>
+      <li><h3>Pasteurise</h3><p class="spec">72 °C · 15 s</p><p>Heat treatment of the milk.</p></li>
+      <li><h3>Set and cut</h3><p>Coagulate, then cut the curd.</p></li>
+      <li><h3>Cook and drain</h3><p>Whey drawn off.</p></li>
+      <li><h3>Stretch</h3><p>Heat, stretch, mould.</p></li>
+      <li><h3>Brine</h3><p>Cool and salt.</p></li>
+      <li><h3>Pack</h3><p>Label and seal.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="block alt" id="game" aria-labelledby="game-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow mono">Project 1</span>
+      <h2 id="game-title">The new operator game <span class="status mono">In development</span></h2>
+      <p>The first version covers what a new operator needs in the first weeks. Each level is a short scenario with a clear right and wrong, and a reason.</p>
+    </div>
+    <div class="two">
+      <div class="panel">
+        <h3>First version: week-one topics</h3>
+        <p>Six topics, each played in short scenario rounds.</p>
+        <ul class="topics">
+          <li>Personal hygiene and GMP<small>Hands, clothing, jewellery, illness</small></li>
+          <li>Hygiene zones<small>Where you may go, and what you carry</small></li>
+          <li>Handling and cross-contamination<small>Tools, hoses, floors, product</small></li>
+          <li>CIP basics<small>What cleaning-in-place is and why it matters</small></li>
+          <li>Chemicals and safety<small>Labels, dilution, protective gear</small></li>
+          <li>Reporting problems<small>What to say, to whom, how fast</small></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Play it</h3>
+        <p>Free to play in the browser or on a phone. Hosted on itch.io, with no account needed to try the demo.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="#game">Play on itch.io</a>
+        </div>
+        <p class="note">[ITCH.IO LINK] and a screenshot gallery go here. Languages: English now, Bahasa Indonesia after a native-speaker review.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="goals-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow mono">Design goals</span>
+      <h2 id="goals-title">Made for the plant floor, not the office.</h2>
+    </div>
+    <ul class="goals">
+      <li><b>Phone first</b><span>Plays on low-cost phones.</span></li>
+      <li><b>Light on data</b><span>Small downloads, usable on weak connections.</span></li>
+      <li><b>QR at the line</b><span>Scan a code on the wall to open the right level.</span></li>
+      <li><b>Pictures and audio</b><span>Less reading, so more people can learn from it.</span></li>
+      <li><b>Two languages</b><span>Bahasa Indonesia and English.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="block alt" id="knowledge" aria-labelledby="kb-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow mono">Project 2</span>
+      <h2 id="kb-title">The dairy knowledge base <span class="status mono">Started</span></h2>
+      <p>A structured library of dairy process, quality, hygiene, maintenance and troubleshooting. It feeds the game and, later, consulting work.</p>
+    </div>
+    <div class="two">
+      <div class="panel">
+        <h3>How it is organised</h3>
+        <p>Every entry sits under a topic and a product, so a problem can be found from either direction.</p>
+        <span class="mono eyebrow" style="margin-top:24px;margin-bottom:0">Topics</span>
+        <div class="tags">
+          <span class="tag mono">Process</span><span class="tag mono">Quality</span><span class="tag mono">Hygiene</span><span class="tag mono">Maintenance</span><span class="tag mono">Troubleshooting</span>
+        </div>
+        <span class="mono eyebrow" style="margin-top:24px;margin-bottom:0">Products</span>
+        <div class="tags">
+          <span class="tag mono">Milk</span><span class="tag mono">Yogurt</span><span class="tag mono">Ice cream</span><span class="tag mono">Soft cheese</span><span class="tag mono">Mozzarella</span>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>One entry, laid out</h3>
+        <p>Entry title: <b>Mozzarella will not stretch</b></p>
+        <table class="entry">
+          <tbody>
+            <tr><th scope="row">Symptom</th><td class="pending">[to be written]</td></tr>
+            <tr><th scope="row">Where in the process</th><td class="pending">[to be written]</td></tr>
+            <tr><th scope="row">Likely causes</th><td class="pending">[to be written]</td></tr>
+            <tr><th scope="row">Check first</th><td class="pending">[to be written]</td></tr>
+            <tr><th scope="row">Source</th><td class="pending">[to be written]</td></tr>
+            <tr><th scope="row">Reviewed by</th><td class="pending">[reviewer and date]</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="about" aria-labelledby="about-title">
+  <div class="wrap about">
+    <div class="photo mono">[Your photo]</div>
+    <div>
+      <span class="eyebrow mono">About</span>
+      <h2 id="about-title" style="font-weight:800;font-stretch:112%;font-size:clamp(1.9rem,4vw,2.9rem);letter-spacing:-0.02em;margin-bottom:20px">I make dairy plants easier to learn.</h2>
+      <p>I'm [Your Name]. I studied food science and worked in soft cheese and mozzarella production. I'm now finishing an MSc in Food Engineering.</p>
+      <p>This site collects two side projects: a training game for new dairy operators and a dairy knowledge base. Both start from what a new operator needs to know before their first shift.</p>
+      <ul class="facts">
+        <li><span>Education</span><span>BSc Food Science. MSc Food Engineering, in progress.</span></li>
+        <li><span>Experience</span><span>Dairy production: soft cheese and mozzarella.</span></li>
+        <li><span>Markets</span><span>Indonesia first, then Singapore.</span></li>
+        <li><span>Languages</span><span>[Your languages]</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="block alt" id="consulting" aria-labelledby="consult-title">
+  <div class="wrap consult">
+    <div>
+      <span class="eyebrow mono">Consulting</span>
+      <h2 id="consult-title" style="font-weight:800;font-stretch:112%;font-size:clamp(1.9rem,4vw,2.9rem);letter-spacing:-0.02em">Plant support for small and medium dairy makers <span class="status mono">Opens later</span></h2>
+      <p style="margin-top:20px;color:var(--ink-2);font-size:1.08rem;max-width:52ch">I plan to offer fixed-scope help, starting with soft cheese and mozzarella. I'm not taking on projects yet. Email me to hear when this opens.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#contact">Get notified</a>
+      </div>
+    </div>
+    <ul class="areas" aria-label="Planned areas of work">
+      <li>Yield diagnostic <span>Planned</span></li>
+      <li>Audit readiness <span>Planned</span></li>
+      <li>Line set-up and commissioning <span>Planned</span></li>
+      <li>Maintenance programme set-up <span>Planned</span></li>
+      <li>Operator and QA training <span>Planned</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="contact" id="contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <h2 id="contact-title">Trainer, plant manager or fellow food scientist? Say hello.</h2>
+    <p>Feedback on the game is especially welcome, from operators and trainers above all.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="mailto:your.email@example.com">Send an email</a>
+      <a class="btn ghost" href="#contact">LinkedIn: [URL]</a>
+    </div>
+    <p class="addr">[your.email@example.com]</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>Training and knowledge content is for education. It does not replace your plant's HACCP plan, SOPs, or local food safety and Halal requirements.</p>
+    <p>© [Year] [Your Name]. Content reviewed by [reviewer name] on [date].</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var opts = document.getElementById('opts');
+  var feedback = document.getElementById('feedback');
+  var reset = document.getElementById('reset');
+  if (!opts) return;
+  var buttons = Array.prototype.slice.call(opts.querySelectorAll('.opt'));
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var right = btn.getAttribute('data-result') === 'right';
+      buttons.forEach(function (b) {
+        b.disabled = true;
+        if (b.getAttribute('data-result') === 'right') b.classList.add('right');
+      });
+      if (!right) btn.classList.add('wrong');
+      feedback.innerHTML = '';
+      var s = document.createElement('strong');
+      s.textContent = right ? 'Correct.' : 'Not quite.';
+      s.style.color = right ? 'var(--good)' : 'var(--bad)';
+      feedback.appendChild(s);
+      feedback.appendChild(document.createTextNode(btn.getAttribute('data-msg')));
+      reset.hidden = false;
+    });
+  });
+
+  reset.addEventListener('click', function () {
+    buttons.forEach(function (b) {
+      b.disabled = false;
+      b.classList.remove('right', 'wrong');
+    });
+    feedback.innerHTML = '';
+    reset.hidden = true;
+    buttons[0].focus();
+  });
+})();
+</script>
+</body>
+</html>
